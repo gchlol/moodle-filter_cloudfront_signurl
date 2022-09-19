@@ -83,6 +83,9 @@
     }
 
     public static function get_canned_policy_stream_name($video_path) {
+        // GCHLOL: Remove src attribute from video path.
+        $video_path = str_replace('src="', '', $video_path);
+        
         $expires = time() + get_config('filter_cloudfront_signurl','validduration');
         // this policy is well known by CloudFront, but you still need to sign it, since it contains your parameters
         $canned_policy = '{"Statement":[{"Resource":"' . $video_path . '","Condition":{"DateLessThan":{"AWS:EpochTime":'. $expires . '}}}]}';
@@ -96,6 +99,10 @@
         // combine the above into a stream name
         $stream_name = self::create_stream_name($video_path, null, $encoded_signature, $expires);
         // url-encode the query string characters to work around a flash player bug
+
+        // GCHLOL: Add src attribute back.
+        $stream_name = 'src="' . $stream_name;
+        
         return $stream_name;
     }
 

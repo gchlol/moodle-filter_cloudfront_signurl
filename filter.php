@@ -67,7 +67,14 @@ require_once($CFG->dirroot.'/filter/cloudfront_signurl/lib.php');
         $urlregex = implode("|",$regexurls);
 
         //$newtext = preg_replace_callback($re = '~(https?://'.$disturl.'/^( |#|"|\')*~is',
-        $newtext = preg_replace_callback($re = '~https?://('.$urlregex.')/[^ #"]*~is',
+        // GCHLOL: Look for CDN in src attribute.
+        /*
+        $newtext = preg_replace_callback($re = '~src="https?://('.$urlregex.')/[^ #"]*~is',
+            array($this, 'callback'), $text);
+            */
+
+            // echo $text;die;
+        $newtext = preg_replace_callback($re = '~src="https?://('.$urlregex.')/[^ #"]*~is',
             array($this, 'callback'), $text);
         
         if (empty($newtext) or $newtext === $text) {
